@@ -1,8 +1,12 @@
 #!/bin/bash
 
+# TODO: Add a progress bar
+# TODO: Ask user to pick a task
+# TODO DB to store tasks... can this connect to notion?
+
 declare -A pomo_options
-pomo_options["work"]="45"
-pomo_options["break"]="10"
+pomo_options["work"]="1"
+pomo_options["break"]="2"
 
 pomodoro() {
   val=$1
@@ -36,3 +40,5 @@ change_pomo() {
   fi
 }
 
+# call the function
+pomodoro work
