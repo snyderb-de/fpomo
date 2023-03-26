@@ -4,20 +4,21 @@
 # TODO DB to store tasks... can this connect to notion?
 
 fpomo_progbar() {
-  barr=''
-  for (( y=50; y <= 100; y++ )); do
-    sleep 0.05
-    barr="${barr} "
-
-    echo -ne "\r"
-    echo -ne "\e[43m$barr\e[0m"
-
-    local left="$(( 100 - $y ))"
-    printf " %${left}s"
-    echo -n "${y}%"
-  done
-  echo -e "\n"
+    barr=''
+    for (( y=50; y <= 100; y++ )); do
+        sleep 0.05
+        barr="${barr} "
+ 
+        echo -ne "\r"
+        echo -ne "\e[43m$barr\e[0m"
+ 
+        local left="$(( 100 - $y ))"
+        printf " %${left}s"
+        echo -n "${y}%"
+    done
+    echo -e "\n"
 }
+
 
 declare -A pomo_options
 pomo_options["work"]=1
@@ -27,15 +28,17 @@ pomodoro() {
   val=$1
   echo "$val" | lolcat
   remaining=$((pomo_options["$val"] * 60))
-  fpomo_progbar &
+  fpomo_progbar "$remaining" &
   fpomo_progbar_pid=$!
   while [ "$remaining" -gt 0 ]; do
     sleep 1
     remaining=$((remaining - 1))
   done
   kill "$fpomo_progbar_pid" >/dev/null 2>&1
+  wait "$fpomo_progbar_pid" 2>/dev/null
   echo "'$val' session done"
 }
+
 
 start_pomodoro() {
   # Number of times to repeat the loop, default is 2
