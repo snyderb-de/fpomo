@@ -98,5 +98,26 @@ start_pomodoro() {
   done
 }
 
+# Repeat the pomodoro process if the user wants and include a long break
+repeat_pomodoro() {
+  while true; do
+    start_pomodoro
+
+    read -r -p "Do you want to take a longer break and repeat? (y/n): " repeat_choice
+    case "$repeat_choice" in
+      [yY]|[yY][eE][sS])
+        read -r -p "Enter the length of the longer break in minutes (default 15): " long_break
+        long_break=${long_break:-15}
+        echo -e "\nTaking a longer break for $long_break minutes"
+        sleep "$((long_break * 60))"
+        ;;
+      *)
+        echo "Alright then, have a good day!"
+        break
+        ;;
+    esac
+  done
+}
+
 # Call the function with command line arguments
-start_pomodoro "$@"
+repeat_pomodoro "$@"
