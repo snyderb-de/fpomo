@@ -10,7 +10,7 @@ pomo_options["break"]=1
 pomodoro() {
   val=$1
   echo "$val" | lolcat
-  remaining=${pomo_options["$val"]}m
+  remaining=$((pomo_options["$val"] * 60))
   while [ "$remaining" -gt 0 ]; do
     # Calculate the remaining time in minutes and seconds
     minutes=$((remaining / 60))
