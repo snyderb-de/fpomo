@@ -10,12 +10,26 @@ pomo_options["break"]=1
 pomodoro() {
   val=$1
   echo "$val" | lolcat
-  for i in $(seq "${pomo_options["$val"]}" -1 1); do
-    progress=$((100 - i*100/pomo_options["$val"]))
-    bar=$(printf "%-${progress}s" " ")
-    printf "[$bar%s] %2d min \r" "" "$i"
-    sleep 1m
+  remaining=${pomo_options["$val"]}m
+  while [ $remaining -gt 0 ]; do
+    # Calculate the remaining time in minutes and seconds
+    minutes=$(($remaining / 60))
+    seconds=$(($remaining % 60))
+
+    # Generate the progress bar
+    bar=$(printf "%-60s" "$(printf "|%${minutes}s" "" | sed 's/ /==/g')")
+
+    # Print the progress bar and remaining time
+    printf "%s| %02d:%02d \r" "$bar" "$minutes" "$seconds"
+
+    # Wait for one second
+    sleep 1
+
+    # Decrement the remaining time
+    remaining=$((remaining - 1))
   done
+
+  # Print the session done message
   echo "'$val' session done"
 }
 
