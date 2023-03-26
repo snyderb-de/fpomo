@@ -12,7 +12,8 @@ pomodoro() {
   echo "$val" | lolcat
   for i in $(seq "${pomo_options["$val"]}" -1 1); do
     progress=$((100 - i*100/pomo_options["$val"]))
-    printf "[%-100s] %2d min \r" "$(printf "%${progress}s" "")" "$i"
+    bar=$(printf "%-${progress}s" " ")
+    printf "[$bar%s] %2d min \r" "" "$i"
     sleep 1m
   done
   echo "'$val' session done"
