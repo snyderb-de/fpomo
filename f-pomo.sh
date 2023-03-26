@@ -23,7 +23,9 @@ fpomo_progbar() {
     local remaining_spaces=$((50 - progress_bar_length))
     local spaces=$(printf "%${remaining_spaces}s")
 
-    echo -ne "\r\e[43m${progress_bar}\e[0m${spaces} ${percentage}%" 
+    echo -ne "\r\033[48;2;177;124;1m${progress_bar}\033[0m${spaces} ${percentage}%"
+    # The above line uses the RGB escape sequence: \033[48;2;<R>;<G>;<B>m
+    # Replace <R>, <G>, and <B> with the respective values of the desired color.
 
     if [ $current_time -ge $end_time ]; then
       break
