@@ -3,6 +3,22 @@
 # TODO: Ask user to pick a task
 # TODO DB to store tasks... can this connect to notion?
 
+fpomo_progbar() {
+  barr=''
+  for (( y=50; y <= 100; y++ )); do
+    sleep 0.05
+    barr="${barr} "
+
+    echo -ne "\r"
+    echo -ne "\e[43m$barr\e[0m"
+
+    local left="$(( 100 - $y ))"
+    printf " %${left}s"
+    echo -n "${y}%"
+  done
+  echo -e "\n"
+}
+
 declare -A pomo_options
 pomo_options["work"]=1
 pomo_options["break"]=1
