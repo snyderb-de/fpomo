@@ -4,17 +4,17 @@
 # TODO DB to store tasks... can this connect to notion?
 
 declare -A pomo_options
-pomo_options["work"]=1
-pomo_options["break"]=1
+pomo_options["work"]=25
+pomo_options["break"]=5
 
 pomodoro() {
   val=$1
   echo "$val" | lolcat
   remaining=${pomo_options["$val"]}m
-  while [ $remaining -gt 0 ]; do
+  while [ "$remaining" -gt 0 ]; do
     # Calculate the remaining time in minutes and seconds
-    minutes=$(($remaining / 60))
-    seconds=$(($remaining % 60))
+    minutes=$((remaining / 60))
+    seconds=$((remaining % 60))
 
     # Generate the progress bar
     bar=$(printf "%-60s" "$(printf "|%${minutes}s" "" | sed 's/ /==/g')")
