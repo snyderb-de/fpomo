@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# TODO: make repeat keep name, work time, break time, and number of loops. 
+# TODO: add a pause option
+# TODO: Shellcheck compliance 
+
+
 fpomo_progbar() {
   local total_seconds=$1
   local start_time=$(date +%s)
