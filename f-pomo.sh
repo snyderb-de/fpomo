@@ -17,10 +17,11 @@ pomodoro() {
     seconds=$((remaining % 60))
 
     # Generate the progress bar
-    bar=$(printf "%-60s" "$(printf "|%${minutes}s" "" | sed 's/ /==/g')")
+    progress=$(( ((pomo_options["$val"] * 60) - remaining) * 60 / (pomo_options["$val"] * 60) ))
+    bar=$(printf "| %-${progress}s%$((60 - progress))s |" "=" "")
 
     # Print the progress bar and remaining time
-    printf "%s| %02d:%02d \r" "$bar" "$minutes" "$seconds"
+    printf "%s %02d:%02d\r" "$bar" "$minutes" "$seconds"
 
     # Wait for one second
     sleep 1
