@@ -41,9 +41,18 @@ pomo_options["break"]=1
 
 pomodoro() {
   val=$1
-  echo "$val" 
+  emoji=""
+  case "$val" in
+    "work")
+      emoji="🔨"
+      ;;
+    "break")
+      emoji="☕"
+      ;;
+  esac
+  echo -e "\n$emoji $val session for \"$task_name\" (Pomodoro $current_pomodoro 🍅) starting..."
   remaining=$((pomo_options["$val"] * 60))
-  fpomo_progbar "$remaining" & 
+  fpomo_progbar "$remaining" &
   fpomo_progbar_pid=$!
   while [ "$remaining" -gt 0 ]; do
     sleep 1
@@ -51,30 +60,30 @@ pomodoro() {
   done
   kill "$fpomo_progbar_pid" >/dev/null 2>&1
   wait "$fpomo_progbar_pid" 2>/dev/null
-  echo "'$val' session done"
+  echo -e "$emoji '$val' session for \"$task_name\" (Pomodoro $current_pomodoro 🍅) done\n"
 }
-
 
 start_pomodoro() {
   # Ask the user to name the task
-  read -p -r "Please enter the task name: " task_name
+  read -r -p "Please enter the task name: " task_name
   echo "Task: $task_name"
 
   # Ask the user for the work time in minutes, with a default of 25 minutes
-  read -p -r "Enter work time in minutes (default 25): " work_time
+  read -r -p "Enter work time in minutes (default 25): " work_time
   work_time=${work_time:-25}
   pomo_options["work"]=$work_time
 
   # Ask the user for the break time in minutes, with a default of 5 minutes
-  read -p -r "Enter break time in minutes (default 5): " break_time
+  read -r -p "Enter break time in minutes (default 5): " break_time
   break_time=${break_time:-5}
   pomo_options["break"]=$break_time
 
   # Ask the user for the number of loops, with a default of 2
-  read -p -r "Enter the number of Pomodori (default 2): " num_loops
+  read -r -p "Enter the number of Pomodori (default 2): " num_loops
   num_loops=${num_loops:-2}
 
   for ((i=1; i <= num_loops; i++)); do
+    current_pomodoro=$i
     pomodoro "work"
     pomodoro "break"
   done
