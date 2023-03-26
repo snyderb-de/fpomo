@@ -11,26 +11,13 @@ pomodoro() {
   val=$1
   echo "$val" | lolcat
   remaining=$((pomo_options["$val"] * 60))
+  fpomo_progbar &
+  fpomo_progbar_pid=$!
   while [ "$remaining" -gt 0 ]; do
-    # Calculate the remaining time in minutes and seconds
-    minutes=$((remaining / 60))
-    seconds=$((remaining % 60))
-
-    # Generate the progress bar
-    progress=$(( ((pomo_options["$val"] * 60) - remaining) * 60 / (pomo_options["$val"] * 60) ))
-    bar=$(printf "| %-${progress}s%$((60 - progress))s |" "=" "")
-
-    # Print the progress bar and remaining time
-    printf "%s %02d:%02d\r" "$bar" "$minutes" "$seconds"
-
-    # Wait for one second
     sleep 1
-
-    # Decrement the remaining time
     remaining=$((remaining - 1))
   done
-
-  # Print the session done message
+  kill "$fpomo_progbar_pid" >/dev/null 2>&1
   echo "'$val' session done"
 }
 
