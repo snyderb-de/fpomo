@@ -34,10 +34,16 @@ fpomo_progbar() {
   echo -e "\n"
 }
 
-
 declare -A pomo_options
 pomo_options["work"]=1
 pomo_options["break"]=1
+
+print_tomato_counter() {
+  for ((j=1; j <= current_pomodoro; j++)); do
+    echo -n "🍅"
+  done
+  echo -e "\n"
+}
 
 pomodoro() {
   val=$1
@@ -50,7 +56,10 @@ pomodoro() {
       emoji="☕"
       ;;
   esac
-  echo -e "\n$emoji $val session for \"$task_name\" (Pomodoro $current_pomodoro 🍅) starting..."
+  clear
+  echo -e "Working on \"$task_name\""
+  print_tomato_counter
+  echo -e "$emoji $val on Pomodoro $current_pomodoro 🍅..."
   remaining=$((pomo_options["$val"] * 60))
   fpomo_progbar "$remaining" &
   fpomo_progbar_pid=$!
@@ -60,13 +69,11 @@ pomodoro() {
   done
   kill "$fpomo_progbar_pid" >/dev/null 2>&1
   wait "$fpomo_progbar_pid" 2>/dev/null
-  echo -e "$emoji '$val' session for \"$task_name\" (Pomodoro $current_pomodoro 🍅) done\n"
 }
 
 start_pomodoro() {
   # Ask the user to name the task
   read -r -p "Please enter the task name: " task_name
-  echo "Task: $task_name"
 
   # Ask the user for the work time in minutes, with a default of 25 minutes
   read -r -p "Enter work time in minutes (default 25): " work_time
@@ -85,10 +92,11 @@ start_pomodoro() {
   for ((i=1; i <= num_loops; i++)); do
     current_pomodoro=$i
     pomodoro "work"
-    pomodoro "break"
+    if [ "$i" -lt "$num_loops" ]; then
+      pomodoro "break"
+    fi
   done
 }
-
 
 # Call the function with command line arguments
 start_pomodoro "$@"
