@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# TODO: Ask user to pick a task
-# TODO DB to store tasks... can this connect to notion?
-
 fpomo_progbar() {
   local total_seconds=$1
   local start_time=$(date +%s)
@@ -23,7 +20,7 @@ fpomo_progbar() {
     local remaining_spaces=$((50 - progress_bar_length))
     local spaces=$(printf "%${remaining_spaces}s")
 
-    echo -ne "\r\033[48;2;177;124;1m${progress_bar}\033[0m${spaces} ${percentage}%"
+    echo -ne " \r\033[48;2;177;124;1m${progress_bar}\033[0m${spaces} ${percentage}%"
     # The above line uses the RGB escape sequence: \033[48;2;<R>;<G>;<B>m
     # Replace <R>, <G>, and <B> with the respective values of the desired color.
 
@@ -59,27 +56,30 @@ pomodoro() {
 
 
 start_pomodoro() {
-  # Number of times to repeat the loop, default is 2
-  if [ -n "$1" ] && [ "$1" -eq "$1" ] 2>/dev/null; then
-    num_loops=$1
-  else
-   # Default loops
-    num_loops=2
-  fi
+  # Ask the user to name the task
+  read -p -r "Please enter the task name: " task_name
+  echo "Task: $task_name"
 
-  # Set the length of the work and break sessions based on command line arguments
-  if [ -n "$2" ] && [ "$2" -eq "$2" ] 2>/dev/null; then
-    pomo_options["work"]=$2
-  fi
-  if [ -n "$3" ] && [ "$3" -eq "$3" ] 2>/dev/null; then
-    pomo_options["break"]=$3
-  fi
+  # Ask the user for the work time in minutes, with a default of 25 minutes
+  read -p -r "Enter work time in minutes (default 25): " work_time
+  work_time=${work_time:-25}
+  pomo_options["work"]=$work_time
+
+  # Ask the user for the break time in minutes, with a default of 5 minutes
+  read -p -r "Enter break time in minutes (default 5): " break_time
+  break_time=${break_time:-5}
+  pomo_options["break"]=$break_time
+
+  # Ask the user for the number of loops, with a default of 2
+  read -p -r "Enter the number of Pomodori (default 2): " num_loops
+  num_loops=${num_loops:-2}
 
   for ((i=1; i <= num_loops; i++)); do
     pomodoro "work"
     pomodoro "break"
   done
 }
+
 
 # Call the function with command line arguments
 start_pomodoro "$@"
