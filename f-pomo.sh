@@ -4,8 +4,8 @@
 # TODO DB to store tasks... can this connect to notion?
 
 declare -A pomo_options
-pomo_options["work"]=25
-pomo_options["break"]=5
+pomo_options["work"]=1
+pomo_options["break"]=1
 
 pomodoro() {
   val=$1
