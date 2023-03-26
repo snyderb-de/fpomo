@@ -4,19 +4,35 @@
 # TODO DB to store tasks... can this connect to notion?
 
 fpomo_progbar() {
-    barr=''
-    for (( y=50; y <= 100; y++ )); do
-        sleep 0.05
-        barr="${barr} "
- 
-        echo -ne "\r"
-        echo -ne "\e[43m$barr\e[0m"
- 
-        local left="$(( 100 - $y ))"
-        printf " %${left}s"
-        echo -n "${y}%"
-    done
-    echo -e "\n"
+  local total_seconds=$1
+  local start_time=$(date +%s)
+  local end_time=$((start_time + total_seconds))
+  local current_time
+
+  while true; do
+    current_time=$(date +%s)
+    local time_passed=$((current_time - start_time))
+    local percentage=$((time_passed * 100 / total_seconds))
+
+    if [ $percentage -gt 100 ]; then
+      percentage=100
+    fi
+
+    local progress_bar_length=$((percentage / 2))
+    local progress_bar=$(printf "%${progress_bar_length}s" | tr ' ' ' ')
+    local remaining_spaces=$((50 - progress_bar_length))
+    local spaces=$(printf "%${remaining_spaces}s")
+
+    echo -ne "\r\e[43m${progress_bar}\e[0m${spaces} ${percentage}%" 
+
+    if [ $current_time -ge $end_time ]; then
+      break
+    fi
+
+    sleep 1
+  done
+
+  echo -e "\n"
 }
 
 
@@ -26,9 +42,9 @@ pomo_options["break"]=1
 
 pomodoro() {
   val=$1
-  echo "$val" | lolcat
+  echo "$val" 
   remaining=$((pomo_options["$val"] * 60))
-  fpomo_progbar "$remaining" &
+  fpomo_progbar "$remaining" & 
   fpomo_progbar_pid=$!
   while [ "$remaining" -gt 0 ]; do
     sleep 1
