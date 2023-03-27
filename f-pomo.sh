@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # TODO: make repeat keep name, work time, break time, and number of loops. 
-# TODO: add a pause option
+# TODO: add a pause option duing any timer
 # TODO: Shellcheck compliance 
+# TODO: add a help option
 
 
 fpomo_progbar() {
@@ -58,7 +59,7 @@ pomodoro() {
       emoji="🔨"
       ;;
     "break")
-      emoji="☕"
+      emoji="🍹"
       ;;
   esac
   clear
