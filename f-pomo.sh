@@ -4,13 +4,17 @@
 # TODO: add a pause option duing any timer
 # TODO: Shellcheck compliance 
 # TODO: add a help option
+# TODO: add spaces to tomato counter
 
 
 fpomo_progbar() {
   local total_seconds=$1
-  local start_time=$(date +%s)
-  local end_time=$((start_time + total_seconds))
+  local start_time
+  local end_time
   local current_time
+
+  start_time=$(date +%s)
+  end_time=$((start_time + total_seconds))
 
   while true; do
     current_time=$(date +%s)
@@ -22,15 +26,19 @@ fpomo_progbar() {
     fi
 
     local progress_bar_length=$((percentage / 2))
-    local progress_bar=$(printf "%${progress_bar_length}s" | tr ' ' ' ')
-    local remaining_spaces=$((50 - progress_bar_length))
-    local spaces=$(printf "%${remaining_spaces}s")
+    local progress_bar
+    local remaining_spaces
+    local spaces
+
+    progress_bar=$(printf "%${progress_bar_length}s" | tr ' ' ' ')
+    remaining_spaces=$((50 - progress_bar_length))
+    spaces=$(printf "%${remaining_spaces}s")
 
     echo -ne " \r\033[48;2;177;124;1m${progress_bar}\033[0m${spaces} ${percentage}%"
     # The above line uses the RGB escape sequence: \033[48;2;<R>;<G>;<B>m
     # Replace <R>, <G>, and <B> with the respective values of the desired color.
 
-    if [ $current_time -ge $end_time ]; then
+    if [ "$current_time" -ge "$end_time" ]; then
       break
     fi
 
